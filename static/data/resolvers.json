@@ -1,0 +1,62 @@
+{
+  "google": {
+    "name": "Google Public DNS",
+    "website": "https://developers.google.com/speed/public-dns/",
+    "ips": [
+      "8.8.8.8",
+      "8.8.4.4",
+      "2001:4860:4860::8888",
+      "2001:4860:4860::8844"
+    ]
+  },
+  "yandex": {
+    "name": "Yandex.DNS (Basic version)",
+    "website": "https://dns.yandex.com/",
+    "ips": [
+      "77.88.8.8",
+      "77.88.8.1"
+    ]
+  },
+  "opendns": {
+    "name": "OpenDNS",
+    "website": "https://www.opendns.com/",
+    "ips": [
+      "208.67.222.222",
+      "208.67.220.220"
+    ]
+  },
+  "freenom": {
+    "name": "Freenom World",
+    "website": "http://www.freenom.world/en/index.html",
+    "ips": [
+      "80.80.80.80",
+      "80.80.81.81"
+    ]
+  },
+  "dyn": {
+    "name": "Dyn Resolver",
+    "website": "https://dyn.com/",
+    "ips": [
+      "216.146.35.35",
+      "216.146.36.36"
+    ]
+  },
+  "opennic": {
+    "name": "OpenNIC Project",
+    "website": "https://www.opennicproject.org/",
+    "ips": [
+      "185.121.177.177",
+      "2a05:dfc7:5::53",
+      "185.121.177.53",
+      "2a05:dfc7:5::5353"
+    ]
+  },
+  "verisign": {
+    "name": "Verisign Public DNS",
+    "website": "https://www.verisign.com/en_US/security-services/public-dns/index.xhtml",
+    "ips": [
+      "64.6.64.6",
+      "64.6.65.6"
+    ]
+  }
+}
