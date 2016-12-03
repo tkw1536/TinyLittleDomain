@@ -26,8 +26,12 @@
     <paper-item>
       <paper-item-body>
           {{item}}
+
           <template is="dom-if" if="{{show}}">
-            <paper-button on-click="checkDNS" id="dns">Check DNS</paper-button>
+
+            <iron-ajax id="ajax" url="/check_domain" method="GET" auto on-response="onDataReceived"></iron-ajax>
+
+            <paper-button id="dns">{{exists}}</paper-button>
           </template>
       </paper-item-body>
     </paper-item>
@@ -42,16 +46,34 @@
       },
       'item': {
         'type': String,
+        'notify': true
       },
       'show': {
         'type': Boolean,
+      },
+      'exists': {
+        'type': String,
+        'value': ''
       }
     },
     listeners: {
-      'dns-on-click': 'checkDNS'
+      'dns-on-click': 'checkDNS',
+      'item-changed': 'itemChanged'
     },
-    checkDNS: function(evt){
-      console.log(evt.target, this.item);
+    itemChanged: function(evt) {
+      var ajax = this.$$('#ajax');
+      console.log("stuff");
+      ajax.params = {'resolver': 'google', 'domain': this.item}
+      ajax.generateRequest();
+    },
+    onDataReceived: function(response){
+      var r = response.detail.response;
+      console.log(r);
+      if(r["success"] && !r["existence"]){
+        this.exists = 'Free';
+      } else {
+        this.exists = 'Exists';
+      }
     }
   });
   </script>
