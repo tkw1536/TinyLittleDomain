@@ -86,3 +86,29 @@ def is_valid_domainname(name: str) -> bool:
 
     # and check if it is a valid TLD (from IANA)
     return tld in TLDS
+
+
+def check_domains(server, domain):
+    """ Checks a ing """
+
+    if not is_valid_domainname(domain):
+        return {
+            'success': False, 'message': 'Invalid domain name'
+        }
+
+    try:
+        servers = get_resolver_list(server)
+    except KeyError:
+        return {
+            'success': False, 'message': 'Invalid server'
+        }
+
+    try:
+        existence = does_domain_exist(domain, servers)
+        return {
+            'success': True, 'domain': domain, 'existence': existence
+        }
+    except:
+        return {
+            'success': False, 'message': 'Unknown error resolving domains'
+        }

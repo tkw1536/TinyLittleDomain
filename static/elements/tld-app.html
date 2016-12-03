@@ -1,0 +1,136 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+
+<link rel="import" href="tld-element.html">
+
+
+<link rel="stylesheet" href="tld-app.css">
+
+<dom-module is="tld-app">
+  <template>
+
+    <!-- Ajax all the datas -->
+    <iron-ajax url="/data/tlds.json" auto on-response="dataTLDLoaded"></iron-ajax>
+    <iron-ajax url="/data/resolvers.json" auto on-response="dataResolversLoaded"></iron-ajax>
+
+    <!-- About dialog -->
+    <paper-dialog id="about" class="about" modal>
+      <h2>About TinyLittleDomain</h2>
+      <div>
+        Nice suggestions for your domains
+      </div>
+      <paper-button dialog-confirm autofocus>Close</paper-button>
+    </paper-dialog>
+
+    <!-- Settings dialog -->
+    <paper-dialog id="settings" class="settings" modal>
+      <h2>Settings</h2>
+      <div>
+        <paper-toggle-button checked="{{enableResolveDNS}}">Allow DNS resolution</paper-toggle-button>
+      </div>
+      <paper-button dialog-confirm autofocus>Save &amp; Close</paper-button>
+    </paper-dialog>
+
+    <!-- LocalStorage -->
+    <iron-localstorage name="enableResolveDNS" value="{{enableResolveDNS}}">
+    </iron-localstorage>
+
+    <template is="dom-if" if="[[isLoaded==2]]">
+      <!-- search box and buttons -->
+      <div>
+        <paper-input label="Domain to search for" value="{{ domainSearchInput }}" class="search-bar">
+
+          <paper-icon-button suffix onclick="settings.open()" icon="settings" alt="Settings" title="Settings">
+          </paper-icon-button>
+          <paper-icon-button suffix onclick="about.open()" icon="info" alt="About" title="About">
+          </paper-icon-button>
+        </paper-input>
+      </div>
+
+      <!-- results of the search and stuff -->
+      <paper-listbox>
+        <template is="dom-repeat" items="[[suggestions]]">
+          <tld-element show='{{showDNSButton}}' item='{{item}}' >
+          </tld-element>
+        </template>
+      </paper-listbox>
+    </template>
+  </template>
+  <script src='suggestions.js'></script>
+  <script>
+  Polymer({
+    is: 'tld-app',
+    properties: {
+      'dataTLDs': {
+        'type': Array,
+        'value': []
+      },
+      'dataResolvers': {
+        'type': Object,
+        'value': {}
+      },
+      'isLoaded': {
+        'type': Number,
+        'value': 0
+      },
+
+
+
+      'domainSearchInput': {
+        'type': String,
+        'notify': true
+      },
+
+      'exists': {
+        'type': Boolean,
+        'default': false
+      },
+
+      'suggestions': {
+        'type': Array,
+        'value': []
+      },
+
+      'enableResolveDNS': {
+        'type': Boolean,
+        'value': false
+      }
+    },
+    listeners: {
+      'domain-search-input-changed': 'domainSearchUpdated',
+      'dns-on-click': 'checkDNS'
+    },
+    domainSearchUpdated: function(evt){
+      this.debounce('domainSearchUpdated', function(){
+        var value = evt.detail.value;
+        this.suggestions = Suggest(value, this.dataTLDs);
+      }, 200);
+    },
+    dataTLDLoaded: function(evt) {
+      this.dataTLDs = evt.detail.response["tlds"];
+      this.isLoaded += 1;
+    },
+    dataResolversLoaded: function(evt) {
+      this.dataResolvers = evt.detail.response;
+      this.isLoaded += 1;
+    }
+  });
+  </script>
+</dom-module>

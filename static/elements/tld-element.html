@@ -1,0 +1,58 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module is="tld-element">
+  <template>
+    <target-element name="{{show}}"></target-element>
+    <target-element name="{{item}}"></target-element>
+
+    <paper-item>
+      <paper-item-body>
+          {{item}}
+          <template is="dom-if" if="{{show}}">
+            <paper-button on-click="checkDNS" id="dns">Check DNS</paper-button>
+          </template>
+      </paper-item-body>
+    </paper-item>
+  </template>
+  <script>
+  Polymer({
+    is: 'tld-element',
+    properties: {
+      'checkDNS': {
+        'type': String,
+        'notify': true
+      },
+      'item': {
+        'type': String,
+      },
+      'show': {
+        'type': Boolean,
+      }
+    },
+    listeners: {
+      'dns-on-click': 'checkDNS'
+    },
+    checkDNS: function(evt){
+      console.log(evt.target, this.item);
+    }
+  });
+  </script>
+</dom-module>
